@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sound.midi.Soundbank;
+import java.io.Console;
 import java.util.Date;
 import java.util.List;
 
@@ -56,18 +57,19 @@ public class CommentController {
         return ResultVOUtil.success(commentService.getById(id));
     }
 
-    @PostMapping("/getCommentList")
+    @GetMapping("/getCommentList")
     public ResultVO getCommentList(@RequestParam("articleId") Long articleId) {
         return ResultVOUtil.success(commentService.getCommentList(articleId));
     }
 
     @PostMapping("/save")
-    public ResultVO save(Comment comment, HttpServletRequest httpServletRequest) {
+    public ResultVO save(@RequestBody Comment comment, HttpServletRequest httpServletRequest) {
+        System.out.println("comment:  " + comment);
         try {
             String ip = IPUtil.getIpAddr(httpServletRequest);
             comment.setTime(new Date());
             comment.setIp(ip);
-            comment.setAddress(AddressUtil.getAddress(ip));
+            //comment.setAddress(AddressUtil.getAddress(ip));
             String header = httpServletRequest.getHeader("User-Agent");
             UserAgent userAgent = UserAgent.parseUserAgentString(header);
             Browser browser = userAgent.getBrowser();
